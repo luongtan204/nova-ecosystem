@@ -1,32 +1,40 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Tailwind v4: replaces @tailwind base/components/utilities */
+@import "tailwindcss";
 
-/* ─── Smooth scrolling ─────────────────────────────────────────────────────── */
+/* ─── Dark mode via .dark class ───────────────────────────────────────────── */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ─── Custom theme tokens (Tailwind v4 CSS-based config) ──────────────────── */
+@theme {
+  /* Colors */
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+
+  /* Typography */
+  --font-family-sans: var(--font-inter), system-ui, sans-serif;
+}
+
+/* ─── Smooth scrolling ────────────────────────────────────────────────────── */
 html {
   scroll-behavior: smooth;
 }
 
-/* ─── CSS Design Tokens ────────────────────────────────────────────────────── */
-@layer base {
-  :root {
-    /* Light theme */
-    --background: 0 0% 98%;
-    --foreground: 224 71% 4%;
-  }
+/* ─── CSS Design Tokens ───────────────────────────────────────────────────── */
+:root {
+  --background: 0 0% 98%;
+  --foreground: 224 71% 4%;
+}
 
-  .dark {
-    /* Dark theme */
-    --background: 224 71% 4%;
-    --foreground: 0 0% 98%;
-  }
+.dark {
+  --background: 224 71% 4%;
+  --foreground: 0 0% 98%;
+}
 
-  * {
-    @apply border-border;
-  }
-
-  body {
-    @apply bg-background text-foreground;
-    font-feature-settings: "rlig" 1, "calt" 1;
-  }
+/* ─── Base body styles ────────────────────────────────────────────────────── */
+body {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-feature-settings: "rlig" 1, "calt" 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
