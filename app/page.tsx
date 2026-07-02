@@ -2,6 +2,7 @@ import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
 import ProductGrid from "@/components/ProductGrid";
 import FeaturesSection from "@/components/FeaturesSection";
+import RecentlyViewed from "@/components/RecentlyViewed";
 import NewsletterFooter from "@/components/NewsletterFooter";
 
 export default function Home() {
@@ -11,6 +12,7 @@ export default function Home() {
       <main className="flex-1">
         <HeroSection />
         <ProductGrid />
+        <RecentlyViewed />
         <FeaturesSection />
       </main>
       <NewsletterFooter />
