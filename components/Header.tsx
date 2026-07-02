@@ -1,6 +1,7 @@
 "use client";
 
 import { ShoppingCart, Heart, Zap } from "lucide-react";
+import ThemeToggle from "@/components/ThemeToggle";
 
 const navLinks = ["Ecosystem", "Specs"];
 
@@ -34,6 +35,7 @@ export default function Header() {
 
         {/* Action Icons */}
         <div className="flex items-center gap-1">
+          <ThemeToggle />
           <button
             id="header-favorites-btn"
             aria-label="Favorites"
