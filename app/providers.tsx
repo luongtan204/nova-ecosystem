@@ -2,6 +2,7 @@
 
 import { ThemeProvider } from "next-themes";
 import { Toaster } from "react-hot-toast";
+import ChatWidget from "@/components/ChatWidget";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
@@ -24,6 +25,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
           },
         }}
       />
+      <ChatWidget />
     </ThemeProvider>
   );
 }
