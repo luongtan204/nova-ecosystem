@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { ShoppingCart, Heart, Zap } from "lucide-react";
 import ThemeToggle from "@/components/ThemeToggle";
 import { useStore, selectCartCount, selectFavoriteCount } from "@/store/useStore";
+import { useCartDrawer } from "@/components/CartDrawerContext";
 
 const navLinks = ["Ecosystem", "Specs"];
 
@@ -21,6 +22,7 @@ function Badge({ count }: { count: number }) {
 export default function Header() {
   const cartCount = useStore(selectCartCount);
   const favoriteCount = useStore(selectFavoriteCount);
+  const { open: openCart } = useCartDrawer();
 
   // Defer badge rendering until after client hydration so persisted
   // localStorage state doesn't cause a server/client mismatch.
@@ -72,6 +74,7 @@ export default function Header() {
           <button
             id="header-cart-btn"
             aria-label={`Cart (${cartCount} items)`}
+            onClick={openCart}
             className="relative flex h-9 w-9 items-center justify-center rounded-full text-zinc-600 transition-all hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-white"
           >
             <ShoppingCart className="h-5 w-5" />

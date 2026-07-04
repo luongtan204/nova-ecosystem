@@ -1,5 +1,5 @@
 import Header from "@/components/Header";
-import HeroSection from "@/components/HeroSection";
+import HeroScrollytelling from "@/components/HeroScrollytelling";
 import ProductGrid from "@/components/ProductGrid";
 import FeaturesSection from "@/components/FeaturesSection";
 import RecentlyViewed from "@/components/RecentlyViewed";
@@ -10,7 +10,7 @@ export default function Home() {
     <div className="flex min-h-screen flex-col bg-white dark:bg-zinc-950">
       <Header />
       <main className="flex-1">
-        <HeroSection />
+        <HeroScrollytelling />
         <ProductGrid />
         <RecentlyViewed />
         <FeaturesSection />

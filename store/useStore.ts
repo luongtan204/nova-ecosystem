@@ -15,6 +15,7 @@ type StoreState = {
   // ── Actions ────────────────────────────────────────────────────────────────
   addToCart: (product: Product) => void;
   removeFromCart: (id: string) => void;
+  updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
   toggleFavorite: (id: string) => void;
   addRecentlyViewed: (product: Product) => void;
@@ -24,6 +25,9 @@ type StoreState = {
 
 export const selectCartCount = (s: StoreState) =>
   s.cart.reduce((sum, item) => sum + item.quantity, 0);
+
+export const selectCartTotal = (s: StoreState) =>
+  s.cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
 export const selectFavoriteCount = (s: StoreState) => s.favorites.length;
 
@@ -57,6 +61,16 @@ export const useStore = create<StoreState>()(
       removeFromCart: (id) =>
         set((state) => ({
           cart: state.cart.filter((item) => item.id !== id),
+        })),
+
+      updateQuantity: (id, quantity) =>
+        set((state) => ({
+          cart:
+            quantity <= 0
+              ? state.cart.filter((item) => item.id !== id)
+              : state.cart.map((item) =>
+                  item.id === id ? { ...item, quantity } : item
+                ),
         })),
 
       clearCart: () => set({ cart: [] }),

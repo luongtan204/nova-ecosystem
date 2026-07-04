@@ -1,7 +1,8 @@
 "use client";
 
+import { useRef } from "react";
 import { ArrowRight, Sparkles } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 
 // ─── Shared animation variants ────────────────────────────────────────────────
 
@@ -19,18 +20,83 @@ const item = {
   },
 };
 
-export default function HeroSection() {
+// ─── Floating stat pill ───────────────────────────────────────────────────────
+
+function StatPill({
+  value,
+  label,
+  delay,
+}: {
+  value: string;
+  label: string;
+  delay: number;
+}) {
   return (
-    <section className="relative overflow-hidden bg-white py-28 dark:bg-zinc-950 md:py-36">
-      {/* Ambient background blobs */}
-      <div
+    <motion.div
+      initial={{ opacity: 0, y: 20, scale: 0.9 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ delay, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+      className="flex flex-col items-center rounded-2xl border border-zinc-200/60 bg-white/70 px-5 py-3 shadow-sm backdrop-blur-sm dark:border-zinc-800/60 dark:bg-zinc-900/70"
+    >
+      <span className="text-xl font-extrabold text-zinc-900 dark:text-white">
+        {value}
+      </span>
+      <span className="text-[10px] font-medium uppercase tracking-widest text-zinc-400">
+        {label}
+      </span>
+    </motion.div>
+  );
+}
+
+// ─── Component ────────────────────────────────────────────────────────────────
+
+export default function HeroSection() {
+  const ref = useRef<HTMLElement>(null);
+
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start start", "end start"],
+  });
+
+  // Parallax layers — each element moves at a different rate
+  const blobY = useTransform(scrollYProgress, [0, 1], ["0%", "40%"]);
+  const blob2Y = useTransform(scrollYProgress, [0, 1], ["0%", "25%"]);
+  const headlineY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
+  const subtextY = useTransform(scrollYProgress, [0, 1], ["0%", "18%"]);
+  const opacityOut = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
+
+  return (
+    <section
+      ref={ref}
+      className="relative overflow-hidden bg-white py-28 dark:bg-zinc-950 md:py-36"
+    >
+      {/* ── Parallax ambient blobs ─────────────────────────────────────────── */}
+      <motion.div
         aria-hidden
+        style={{ y: blobY, opacity: opacityOut }}
         className="pointer-events-none absolute inset-0 flex items-center justify-center"
       >
-        <div className="h-[600px] w-[600px] rounded-full bg-violet-500/10 blur-3xl dark:bg-violet-700/15" />
-        <div className="absolute right-1/4 top-1/4 h-[300px] w-[300px] rounded-full bg-indigo-500/10 blur-3xl dark:bg-indigo-700/15" />
-      </div>
+        <div className="h-[700px] w-[700px] rounded-full bg-violet-500/10 blur-3xl dark:bg-violet-700/15" />
+      </motion.div>
 
+      <motion.div
+        aria-hidden
+        style={{ y: blob2Y }}
+        className="pointer-events-none absolute right-1/4 top-1/4 h-[350px] w-[350px] rounded-full bg-indigo-500/10 blur-3xl dark:bg-indigo-700/15"
+      />
+
+      {/* Dot grid texture */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 opacity-[0.03] dark:opacity-[0.06]"
+        style={{
+          backgroundImage:
+            "radial-gradient(circle, #6d28d9 1px, transparent 1px)",
+          backgroundSize: "32px 32px",
+        }}
+      />
+
+      {/* ── Hero content ──────────────────────────────────────────────────── */}
       <motion.div
         className="relative mx-auto max-w-7xl px-6 text-center"
         variants={container}
@@ -48,30 +114,34 @@ export default function HeroSection() {
           </span>
         </motion.div>
 
-        {/* Headline */}
-        <motion.h1
-          variants={item}
-          className="mx-auto max-w-4xl text-5xl font-extrabold leading-[1.1] tracking-tight text-zinc-900 dark:text-white md:text-7xl"
-        >
-          Connected{" "}
-          <span className="bg-gradient-to-r from-violet-600 to-indigo-500 bg-clip-text text-transparent">
-            Intelligence.
-          </span>
-          <br />
-          Seamless{" "}
-          <span className="bg-gradient-to-r from-indigo-500 to-sky-500 bg-clip-text text-transparent">
-            Power.
-          </span>
-        </motion.h1>
+        {/* Headline — parallax layer */}
+        <motion.div style={{ y: headlineY }}>
+          <motion.h1
+            variants={item}
+            className="mx-auto max-w-4xl text-5xl font-extrabold leading-[1.1] tracking-tight text-zinc-900 dark:text-white md:text-7xl"
+          >
+            Connected{" "}
+            <span className="bg-gradient-to-r from-violet-600 to-indigo-500 bg-clip-text text-transparent">
+              Intelligence.
+            </span>
+            <br />
+            Seamless{" "}
+            <span className="bg-gradient-to-r from-indigo-500 to-sky-500 bg-clip-text text-transparent">
+              Power.
+            </span>
+          </motion.h1>
+        </motion.div>
 
-        {/* Subheadline */}
-        <motion.p
-          variants={item}
-          className="mx-auto mt-7 max-w-2xl text-lg leading-relaxed text-zinc-500 dark:text-zinc-400"
-        >
-          One unified ecosystem. Your smartphone, smartwatch, and earbuds — all
-          working in perfect harmony so you can do more, effortlessly.
-        </motion.p>
+        {/* Subheadline — slower parallax */}
+        <motion.div style={{ y: subtextY }}>
+          <motion.p
+            variants={item}
+            className="mx-auto mt-7 max-w-2xl text-lg leading-relaxed text-zinc-500 dark:text-zinc-400"
+          >
+            One unified ecosystem. Your smartphone, smartwatch, and earbuds — all
+            working in perfect harmony so you can do more, effortlessly.
+          </motion.p>
+        </motion.div>
 
         {/* CTAs */}
         <motion.div
@@ -100,18 +170,23 @@ export default function HeroSection() {
           </motion.a>
         </motion.div>
 
-        {/* Social proof */}
-        <motion.p
+        {/* Floating stat pills */}
+        <motion.div
           variants={item}
-          className="mt-10 text-xs text-zinc-400 dark:text-zinc-600"
+          className="mt-14 flex flex-wrap items-center justify-center gap-4"
         >
-          Trusted by{" "}
-          <span className="font-semibold text-zinc-600 dark:text-zinc-400">
-            50,000+
-          </span>{" "}
-          early adopters worldwide
-        </motion.p>
+          <StatPill value="50K+" label="Adopters" delay={0.8} />
+          <StatPill value="4.9★" label="Rating" delay={0.95} />
+          <StatPill value="3 Devices" label="Ecosystem" delay={1.1} />
+          <StatPill value="< 1s" label="Sync Speed" delay={1.25} />
+        </motion.div>
       </motion.div>
+
+      {/* Bottom fade out */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white dark:from-zinc-950"
+      />
     </section>
   );
 }

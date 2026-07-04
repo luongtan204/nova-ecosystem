@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
+import { cookies } from "next/headers";
+import { createClient } from "@/utils/supabase/server";
 
 // ─── Email validation ─────────────────────────────────────────────────────────
 
@@ -6,35 +8,6 @@ const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function isValidEmail(email: unknown): email is string {
   return typeof email === "string" && EMAIL_REGEX.test(email.trim());
-}
-
-// ─── Simulated webhook dispatch ───────────────────────────────────────────────
-
-async function dispatchToWebhook(email: string): Promise<void> {
-  /**
-   * In production, replace this with a real webhook call, e.g.:
-   *
-   *   await fetch("https://webhook.site/<your-id>", {
-   *     method: "POST",
-   *     headers: { "Content-Type": "application/json" },
-   *     body: JSON.stringify({ email, subscribedAt: new Date().toISOString() }),
-   *   });
-   *
-   * For demo purposes we simulate a 900ms network round-trip.
-   */
-  await new Promise<void>((resolve) => setTimeout(resolve, 900));
-
-  // Uncomment below to test with a real webhook.site URL:
-  const webhookUrl = process.env.WEBHOOK_URL ?? "";
-  if (webhookUrl) {
-    await fetch(webhookUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, subscribedAt: new Date().toISOString() }),
-    });
-  }
-
-  console.log(`[subscribe] Dispatched to webhook: ${email}`);
 }
 
 // ─── POST /api/subscribe ──────────────────────────────────────────────────────
@@ -60,28 +33,52 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // 3. Dispatch to external webhook
-  try {
-    await dispatchToWebhook(email.trim());
-  } catch (err) {
-    console.error("[subscribe] Webhook dispatch failed:", err);
+  const normalizedEmail = email.trim().toLowerCase();
+
+  // 3. Insert into Supabase
+  const cookieStore = await cookies();
+  const supabase = createClient(cookieStore);
+
+  const { data, error } = await supabase
+    .from("subscribers")
+    .insert([{ email: normalizedEmail }])
+    .select("id, email, created_at")
+    .single();
+
+  if (error) {
+    // PostgreSQL unique violation code
+    if (error.code === "23505") {
+      return NextResponse.json(
+        { success: false, message: "This email is already on the waitlist! 🎉" },
+        { status: 409 }
+      );
+    }
+
+    // Log full error details for diagnosis
+    console.error("[subscribe] Supabase error:", {
+      code: error.code,
+      message: error.message,
+      details: error.details,
+      hint: error.hint,
+    });
     return NextResponse.json(
-      { success: false, message: "Failed to register. Please try again." },
-      { status: 502 }
+      { success: false, message: error.message ?? "Something went wrong. Please try again." },
+      { status: 500 }
     );
   }
 
-  // 4. Success
+  console.log(`[subscribe] New subscriber: ${data.email} (${data.id})`);
+
   return NextResponse.json(
     {
       success: true,
       message: "You're on the list! We'll be in touch soon.",
+      id: data.id,
     },
-    { status: 200 }
+    { status: 201 }
   );
 }
 
-// Reject all non-POST methods cleanly
 export async function GET() {
   return NextResponse.json({ message: "Method not allowed." }, { status: 405 });
 }
