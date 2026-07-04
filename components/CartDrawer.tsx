@@ -16,6 +16,7 @@ import { iconMap } from "@/lib/products";
 import {
   useStore,
   selectCartTotal,
+  type CartItem,
 } from "@/store/useStore";
 import { useCartDrawer } from "@/components/CartDrawerContext";
 
@@ -47,7 +48,7 @@ const itemVariants = {
 
 // ─── Cart Item Row ────────────────────────────────────────────────────────────
 
-function CartItemRow({ item }: { item: ReturnType<typeof useStore>["cart"][number] }) {
+function CartItemRow({ item }: { item: CartItem }) {
   const removeFromCart = useStore((s) => s.removeFromCart);
   const updateQuantity = useStore((s) => s.updateQuantity);
   const Icon = iconMap[item.iconName];
