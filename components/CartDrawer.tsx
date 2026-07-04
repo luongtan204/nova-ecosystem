@@ -36,7 +36,7 @@ const drawerVariants = {
   },
   exit: {
     x: "100%",
-    transition: { type: "tween" as const, duration: 0.22, ease: "easeIn" },
+    transition: { type: "tween" as const, duration: 0.22, ease: "easeIn" as const },
   },
 };
 
