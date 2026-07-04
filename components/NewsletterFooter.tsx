@@ -102,7 +102,7 @@ export default function NewsletterFooter() {
   return (
     <>
       {/* Newsletter Section */}
-      <section className="border-t border-zinc-200 bg-zinc-50 py-20 dark:border-zinc-800 dark:bg-zinc-900/50">
+      <section id="newsletter" className="border-t border-zinc-200 bg-zinc-50 py-20 dark:border-zinc-800 dark:bg-zinc-900/50">
         <div className="mx-auto max-w-2xl px-6 text-center">
           <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-violet-600 dark:text-violet-400">
             Early Access
