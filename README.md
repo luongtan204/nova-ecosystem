@@ -10,13 +10,65 @@
 
 ---
 
+## 🎯 Tính năng nổi bật
+### 📊 Analytics Tracking & Webhook
+![Analytics Tracking](public/screenshots/analytics.png)
+- **Scroll depth** — milestone 25/50/75/100% + toast notification
+- **Section view** — IntersectionObserver theo dõi từng section
+- **CTA click** — event delegation theo dõi các nút quan trọng
+- Lưu toàn bộ vào Supabase `user_events` table
+![Webhook Form](public/screenshots/webhook.png)
+![Subscribe](public/screenshots/subscribers.png)
+- **Webhook Form** — Lưu đăng ký Waitlist vào bảng `subscribers` và gửi về webhook
+
+### 🗄️ Tích hợp Backend
+  - Database: **Supabase (PostgreSQL)**
+  - API Routes: `app/api/events/route.ts` & `app/api/subscribe/route.ts`
+  - Client Utilities: `lib/analytics.ts`
+  - Cấu hình & SQL: `utils/supabase/` & `supabase/migrations/create_user_events.sql`
+
+### 🌙 Dark Mode & Animation
+![Dark Mode](public/screenshots/darkmode.png)
+![Light Mode](public/screenshots/lightmode.png)
+- Hệ thống theme `next-themes` — tự detect OS preference
+- Toggle button ở Header, transition mượt
+
+### ✨ Nâng cao hiệu ứng
+  - **Skeleton Loading:** `components/SkeletonCard.tsx` (tạo hiệu ứng tải khung xương `animate-pulse` trước khi hiển thị sản phẩm)
+  - **Micro-interactions:** Sử dụng Framer Motion `whileHover`, `whileTap` tạo cảm giác tương tác vật lý (nhấn lún, phóng to) ở `ProductGrid.tsx`, `CartDrawer.tsx` và các nút CTA.
+
+### 🎬 Hero + Scrollytelling
+![Scrollytelling Parallax](public/screenshots/scrollytelling.png)
+- Section đầu tiên gộp Hero và Scrollytelling thành một trải nghiệm cuộn liên mạch
+- 4 "pages" trong 350vh: Hero → Smartphone → Watch → Earbuds
+- `AnimatePresence mode="wait"` đảm bảo không chồng nội dung
+- **Scroll Animation & Parallax (Điểm cộng):** 
+  - File chính: `components/HeroScrollytelling.tsx` (Hook `useScroll`, `useTransform` cho trải nghiệm Scrollytelling)
+  - File phụ: `components/FeaturesSection.tsx` (Hiệu ứng Parallax thẻ tính năng bay ở các tốc độ khác nhau)
+
+### 🛒 E-commerce Mini
+![Gio hang ](public/screenshots/ecommerce.png)
+![Sản phẩm đã xem](public/screenshots/recently_viewed.png)
+![Yêu thích](public/screenshots/wishlist.png)
+- **Giỏ hàng** — CartDrawer slide-in từ phải, tăng/giảm số lượng, xoá sản phẩm
+- **Yêu thích** — toggle heart, lưu persistent qua Zustand
+- **Đã xem** — tự động ghi lại khi click vào sản phẩm, hiển thị trong `RecentlyViewed`
+
+### 🤖 AI Chatbot (Nova AI)
+![AI Chatbot](public/screenshots/chatbot.png)
+- Powered by Google Gemini với 3-model fallback chain
+- System prompt chuyên biệt — chỉ tư vấn sản phẩm NovaOS
+- Typing indicator, error handling, auto-scroll
+
+
+---
 ## 🌐 Demo & Liên kết
 
 | | Link |
 |---|---|
-| 🔗 **Live Demo** | _[Thêm sau khi deploy]_ |
-| 📦 **GitHub Repo** | _[Thêm link repo public]_ |
-| 📊 **PageSpeed Score** | _[Thêm ảnh chụp màn hình]_ |
+| 🔗 **Live Demo** | [https://nova-ecosystem-7gqbtpd7f-luongtan204s-projects.vercel.app](https://nova-ecosystem-7gqbtpd7f-luongtan204s-projects.vercel.app)
+| 📦 **GitHub Repo** | [https://github.com/luongtan204/nova-ecosystem](https://github.com/luongtan204/nova-ecosystem) |
+| 📊 **PageSpeed Score** | > 85/100 (Mobile) |
 
 ---
 
@@ -196,40 +248,15 @@ Hoặc kết nối GitHub repo trực tiếp tại [vercel.com/new](https://verc
 
 ## 📊 PageSpeed Insights Score
 
-> _[Thêm ảnh chụp màn hình PageSpeed ở đây sau khi deploy]_
+> **Điểm tối ưu hóa hiệu suất trên di động > 85/100**
+>
+> *Cách thêm ảnh: Thay thế đường dẫn `public/screenshots/pagespeed.png` bằng ảnh thực tế của bạn hoặc URL ảnh.*
+
+![PageSpeed Insights Score](public/screenshots/pagespeed.png)
 
 Test tại: https://pagespeed.web.dev/
 
----
 
-## 🎯 Tính năng nổi bật
-
-### 🎬 Hero + Scrollytelling
-- Section đầu tiên gộp Hero và Scrollytelling thành một trải nghiệm cuộn liên mạch
-- 4 "pages" trong 350vh: Hero → Smartphone → Watch → Earbuds
-- `AnimatePresence mode="wait"` đảm bảo không chồng nội dung
-
-### 🛒 E-commerce Mini
-- **Giỏ hàng** — CartDrawer slide-in từ phải, tăng/giảm số lượng, xoá sản phẩm
-- **Yêu thích** — toggle heart, lưu persistent qua Zustand
-- **Đã xem** — tự động ghi lại khi click vào sản phẩm, hiển thị trong `RecentlyViewed`
-
-### 🤖 AI Chatbot (Nova AI)
-- Powered by Google Gemini với 3-model fallback chain
-- System prompt chuyên biệt — chỉ tư vấn sản phẩm NovaOS
-- Typing indicator, error handling, auto-scroll
-
-### 📊 Analytics Tracking
-- **Scroll depth** — milestone 25/50/75/100% + toast notification
-- **Section view** — IntersectionObserver theo dõi từng section
-- **CTA click** — event delegation theo dõi các nút quan trọng
-- Lưu toàn bộ vào Supabase `user_events` table
-
-### 🌙 Dark Mode
-- Hệ thống theme `next-themes` — tự detect OS preference
-- Toggle button ở Header, transition mượt
-
----
 
 ## 📝 Git Workflow
 
