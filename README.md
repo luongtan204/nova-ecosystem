@@ -258,20 +258,6 @@ Test tại: https://pagespeed.web.dev/
 
 
 
-## 📝 Git Workflow
-
-```bash
-# Feature branch
-git checkout -b feat/analytics-tracking
-
-# Commit rõ ràng theo Conventional Commits
-git commit -m "feat: add user behavior analytics tracking (scroll/click)"
-git commit -m "fix: resolve scrollytelling text overlap with AnimatePresence"
-git commit -m "seo: configure full metadata API with Open Graph tags"
-git commit -m "chore: remove prisma dependency, cleanup unused files"
-```
-
----
 
 ## 👤 Tác giả
 
