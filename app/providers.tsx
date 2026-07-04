@@ -5,6 +5,8 @@ import { Toaster } from "react-hot-toast";
 import ChatWidget from "@/components/ChatWidget";
 import CartDrawer from "@/components/CartDrawer";
 import { CartDrawerProvider } from "@/components/CartDrawerContext";
+import AnalyticsTracker from "@/components/AnalyticsTracker";
+
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
@@ -29,6 +31,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
             },
           }}
         />
+        <AnalyticsTracker />
         <ChatWidget />
       </CartDrawerProvider>
     </ThemeProvider>
